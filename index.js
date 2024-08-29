@@ -55,6 +55,7 @@ async function initialLoad() {
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
 breedSelect.addEventListener("change", handleBreedSelect);
 
 async function handleBreedSelect() {
