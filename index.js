@@ -1,4 +1,5 @@
 import * as Carousel from "./Carousel.js";
+import {API_KEY} from "./apiKey.js";
 // import axios from "axios";
 
 // The breed selection input element.
@@ -11,29 +12,32 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_5kNbWouslTpGD7rBc8e1Znyt47gUGF1apCeGnru27zrDhOq4TgcpbMzvyuqWv0py";
+
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
- * - Retrieve a list of breeds from the cat API using fetch(). 
+ * - Retrieve a list of breeds from the cat API using fetch().
  * - Create new <options> for each of these breeds, and append them to breedSelect.
  *  - Each option should have a value attribute equal to the id of the breed.
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
 document.onload = initialLoad();
+//Also can use:
+//document.addEventListener('load'){ initialLoad; }
 async function initialLoad() {
-    const res = await fetch("https://api.thecatapi.com/v1/breeds");
-    const jsonData = await res.json();
-    console.log(jsonData);
+  const res = await fetch("https://api.thecatapi.com/v1/breeds");
+  const jsonData = await res.json();
+  // console.log(jsonData);
 
-    jsonData.forEach(obj => {
-        const option = document.createElement('option');
-        option.textContent = obj.name;
-        option.setAttribute('value', obj.id);
-        breedSelect.appendChild(option);
-    });
+  jsonData.forEach((obj) => {
+    const option = document.createElement("option");
+    option.textContent = obj.name;
+    option.setAttribute("value", obj.id);
+    breedSelect.appendChild(option);
+  });
 
+  handleBreedSelect();
 }
 
 /**
@@ -41,15 +45,40 @@ async function initialLoad() {
  * - Retrieve information on the selected breed from the cat API using fetch().
  *  - Make sure your request is receiving multiple array items!
  *  - Check the API documentation if you're only getting a single object.
+ * //////////////////////////////////////////
  * - For each object in the response array, create a new element for the carousel.
  *  - Append each of these new elements to the carousel.
- * - Use the other data you have been given to create an informational section within the infoDump element.
+ * - Use the other data you have been given to create an informational section within the infoDump element.///
  *  - Be creative with how you create DOM elements and HTML.
  *  - Feel free to edit index.html and styles.css to suit your needs, but be careful!
  *  - Remember that functionality comes first, but user experience and design are important.
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+breedSelect.addEventListener("change", handleBreedSelect);
+
+async function handleBreedSelect() {
+  const response = await fetch(
+    "https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=" +
+      breedSelect.value,
+    { headers: { "x-api-key": API_KEY } }
+  );
+  const jsonData = await response.json();
+  console.log(jsonData);
+
+  Carousel.clear();
+  jsonData.forEach((obj) => {
+    const element = Carousel.createCarouselItem(
+      obj.url,
+      obj.breeds[0].name,
+      obj.id
+    );
+
+    Carousel.appendCarousel(element);
+
+    infoDump.textContent = obj.breeds[0].description;
+  });
+}
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
