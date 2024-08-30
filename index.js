@@ -55,34 +55,34 @@ async function initialLoad() {
 //  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
 //  */
 
-breedSelect.addEventListener("change", handleBreedSelect);
+breedSelect.addEventListener("change", axiosHandleBreedSelect);
+//****INITIAL CODE FOR PART 2 BELOW. COMMENTED OUT BC OF USE OF AXIOS IN PART 3*******
+// async function handleBreedSelect() {
+//   const response = await fetch(
+//     "https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=" +
+//       breedSelect.value,
+//     { headers: { "x-api-key": API_KEY } }
+//   );
+//   const jsonData = await response.json();
+//   console.log(jsonData);
 
-async function handleBreedSelect() {
-  const response = await fetch(
-    "https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=" +
-      breedSelect.value,
-    { headers: { "x-api-key": API_KEY } }
-  );
-  const jsonData = await response.json();
-  console.log(jsonData);
+//   /*clear Carousel first upon change.
+//    **Then for each object, create CarouselItem using obj's attributes. Append to Carousel.
+//    **Get description and set that as the infoDump.textContent to appear
+//    */
+//   Carousel.clear();
+//   jsonData.forEach((obj) => {
+//     const element = Carousel.createCarouselItem(
+//       obj.url,
+//       obj.breeds[0].name,
+//       obj.id
+//     );
 
-  /*clear Carousel first upon change.
-   **Then for each object, create CarouselItem using obj's attributes. Append to Carousel.
-   **Get description and set that as the infoDump.textContent to appear
-   */
-  Carousel.clear();
-  jsonData.forEach((obj) => {
-    const element = Carousel.createCarouselItem(
-      obj.url,
-      obj.breeds[0].name,
-      obj.id
-    );
+//     Carousel.appendCarousel(element);
 
-    Carousel.appendCarousel(element);
-
-    infoDump.textContent = obj.breeds[0].description;
-  });
-}
+//     infoDump.textContent = obj.breeds[0].description;
+//   });
+// }
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
@@ -147,7 +147,6 @@ async function axiosHandleBreedSelect() {
   p.textContent = breedsData[0].breeds[0].description;
   infoDump.appendChild(p);
 
-  // TODO
   Carousel.start();
 }
 
